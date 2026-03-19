@@ -214,7 +214,10 @@ export default function Bmain() {
                     </button>
 
                     <p>
-                      Sending you the warmest birthday wishes 💖
+                      Sending you the warmest birthday wishes for today. I can't be there in person, but I’m cheering you on from here.
+                    </p>
+                    <p>
+                      Wishing you a day filled with the same love, joy, and laughter you bring..
                     </p>
                   </div>
                 </motion.div>
