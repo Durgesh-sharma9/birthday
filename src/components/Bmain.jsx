@@ -70,7 +70,7 @@ export default function Bmain() {
       {/* PAGE 2 */}
       {page === 2 && (
         <div className="text-center">
-          <h1 className="text-5xl font-bold">Your Special Day is Here 🎉</h1>
+          <h1 className="text-5xl font-bold">let's celebrate your precious day 🫶🏻🎀🎂🎉</h1>
           <div className="mt-8 text-8xl">{count > 0 ? count : "🎂"}</div>
         </div>
       )}
