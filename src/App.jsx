@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import Bmain from './components/bmain'
+import Bmain from "./components/Bmain";
 
 
 function App() {
