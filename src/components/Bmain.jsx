@@ -6,9 +6,10 @@ export default function Bmain() {
   const [count, setCount] = useState(3);
   const [showMsg, setShowMsg] = useState(false);
   const [wishIndex, setWishIndex] = useState(null);
+  const [showGallery, setShowGallery] = useState(false);
   const [hearts, setHearts] = useState([]);
-  const [confetti, setConfetti] = useState([]);
   const audioRef = useRef(null);
+  const videoRef = useRef(null);
 
   const startMusic = () => {
     audioRef.current?.play().catch(() => {});
@@ -25,6 +26,15 @@ export default function Bmain() {
     }
   }, [page, count]);
 
+  // 🎥 VIDEO + MUSIC CONTROL
+  useEffect(() => {
+    if (page !== 3) {
+      audioRef.current?.play().catch(() => {});
+      videoRef.current?.pause();
+    }
+  }, [page]);
+
+  // ❤️ HEARTS
   const spawnHearts = () => {
     const batch = Array.from({ length: 3 }).map((_, i) => ({
       id: Date.now() + i,
@@ -41,22 +51,6 @@ export default function Bmain() {
     }, 2500);
   };
 
-  const spawnConfetti = () => {
-    const batch = Array.from({ length: 6 }).map((_, i) => ({
-      id: Date.now() + i,
-      size: ["text-xl", "text-2xl", "text-3xl"][i % 3],
-      left: Math.random() * 90,
-    }));
-
-    setConfetti((prev) => [...prev, ...batch]);
-
-    setTimeout(() => {
-      setConfetti((prev) =>
-        prev.filter((c) => !batch.find((b) => b.id === c.id))
-      );
-    }, 2500);
-  };
-
   return (
     <div className="h-screen w-full flex items-center justify-center bg-gradient-to-br from-pink-300 via-rose-300 to-purple-400 text-white font-[cursive] overflow-hidden">
 
@@ -68,18 +62,11 @@ export default function Bmain() {
       {/* PAGE 1 */}
       {page === 1 && (
         <div className="text-center">
-          <motion.h1
-            animate={{ opacity: [0.4, 1, 0.4] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="text-5xl font-bold"
-          >
+          <motion.h1 animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }} className="text-5xl font-bold">
             Something Special is Loading... ✨
           </motion.h1>
 
-          <button
-            onClick={startMusic}
-            className="mt-10 px-6 py-3 bg-white text-pink-500 rounded-full shadow-lg"
-          >
+          <button onClick={startMusic} className="mt-10 px-6 py-3 bg-white text-pink-500 rounded-full shadow-lg">
             Click to Begin 💖
           </button>
         </div>
@@ -91,27 +78,31 @@ export default function Bmain() {
           <h1 className="text-5xl font-bold">
             let's celebrate your precious day 🫶🏻🎀🎂🎉
           </h1>
-          <div className="mt-8 text-8xl">
-            {count > 0 ? count : "🎂"}
-          </div>
+          <div className="mt-8 text-8xl">{count > 0 ? count : "🎂"}</div>
         </div>
       )}
 
       {/* PAGE 3 */}
       {page === 3 && (
-        <div className="text-center">
-          <motion.div
-            animate={{ rotate: [0, 10, -10, 0] }}
-            transition={{ duration: 1.2, repeat: Infinity }}
-            className="text-[180px]"
-          >
+        <div className="text-center space-y-6">
+
+          <div className="w-full rounded-2xl overflow-hidden shadow-xl">
+            <video
+              ref={videoRef}
+              autoPlay
+              loop
+              className="w-full h-48 object-cover"
+              onPlay={() => audioRef.current?.pause()}
+            >
+              <source src="/celebrate.mp4" type="video/mp4" />
+            </video>
+          </div>
+
+          <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 1.2, repeat: Infinity }} className="text-[180px]">
             🎂
           </motion.div>
 
-          <button
-            onClick={() => setPage(4)}
-            className="mt-10 px-6 py-3 bg-pink-500 rounded-full shadow-lg"
-          >
+          <button onClick={() => setPage(4)} className="px-6 py-3 bg-pink-500 rounded-full shadow-lg">
             Open Your Gift 🎁
           </button>
         </div>
@@ -123,10 +114,7 @@ export default function Bmain() {
           <h2 className="text-4xl">A Message for You 💌</h2>
           <p className="mt-4">You make the world brighter ✨</p>
 
-          <button
-            onClick={() => setPage(5)}
-            className="mt-6 bg-pink-500 px-5 py-2 rounded-full shadow"
-          >
+          <button onClick={() => setPage(5)} className="mt-6 bg-pink-500 px-5 py-2 rounded-full shadow">
             One Last Surprise 🎁
           </button>
         </div>
@@ -135,16 +123,10 @@ export default function Bmain() {
       {/* PAGE 5 */}
       {page === 5 && (
         <div className="text-center">
-          <motion.div
-            animate={{ rotate: [0, 8, -8, 0] }}
-            transition={{ duration: 1, repeat: Infinity }}
-            className="text-[200px]"
-          >
+          <motion.div animate={{ rotate: [0, 8, -8, 0] }} transition={{ duration: 1, repeat: Infinity }} className="text-[200px]">
             🎂
           </motion.div>
-
           <p>Click on Cake 🎂</p>
-
           <div className="absolute inset-0" onClick={() => setPage(6)} />
         </div>
       )}
@@ -154,55 +136,46 @@ export default function Bmain() {
         <div className="w-full h-full flex justify-center items-start overflow-y-auto">
           <div className="max-w-md w-full space-y-6 p-4">
 
-            {/* 🎥 VIDEO ADDED */}
-            <div className="w-full rounded-2xl overflow-hidden shadow-xl">
-              <video autoPlay loop muted className="w-full h-48 object-cover">
-                <source src="/celebrate.mp4" type="video/mp4" />
-              </video>
-            </div>
-
-            {/* SLIDESHOW */}
+            {/* GALLERY */}
             <div className="bg-white/20 p-6 rounded-2xl shadow-xl text-center">
-              <div className="overflow-hidden w-72 h-52 rounded-lg mx-auto">
-                <motion.div
-                  className="flex"
-                  animate={{ x: [0, -288, -576, -864, 0] }}
-                  transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-                >
-                  {["/img1.jpeg", "/img2.jpeg", "/img3.jpeg", "/img4.jpeg"].map(
-                    (src, i) => (
-                      <img
-                        key={i}
-                        src={src}
-                        className="w-72 h-52 object-cover flex-shrink-0"
-                      />
-                    )
-                  )}
-                </motion.div>
-              </div>
-
-              <p className="mt-4">You are the most beautiful gift 💖</p>
+              <button onClick={() => setShowGallery(true)} className="bg-pink-500 px-6 py-3 rounded-full shadow">
+                📸 Open Gallery
+              </button>
             </div>
 
-            {/* CONFETTI */}
-            {confetti.map((c) => (
-              <motion.div
-                key={c.id}
-                initial={{ y: -50 }}
-                animate={{ y: 500, opacity: 0 }}
-                transition={{ duration: 2 }}
-                style={{ position: "absolute", left: `${c.left}%` }}
-                className={c.size}
-              >
-                🎉
-              </motion.div>
-            ))}
+            <AnimatePresence>
+              {showGallery && (
+                <motion.div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+                  <div className="bg-white p-4 rounded-xl relative">
+
+                    {/* FIXED CROSS */}
+                    <button
+                      onClick={() => setShowGallery(false)}
+                      className="absolute top-2 right-2 z-[100] bg-red-500 text-white px-3 py-1 rounded-full shadow-lg"
+                    >
+                      ✖
+                    </button>
+
+                    <div className="overflow-hidden w-72 h-52 rounded-lg">
+                      <motion.div
+                        className="flex"
+                        animate={{ x: [0, -288, -576, -864, -1152, -1440, 0] }}
+                        transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
+                      >
+                        {["/img1.jpeg","/img2.jpeg","/img3.jpeg","/img4.jpeg","/img5.jpeg","/img6.jpeg"].map((src,i)=>(
+                          <img key={i} src={src} className="w-72 h-52 object-cover flex-shrink-0"/>
+                        ))}
+                      </motion.div>
+                    </div>
+
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* MESSAGE */}
             <div className="bg-white/20 p-6 rounded-2xl shadow-xl text-center">
-              <button onClick={() => setShowMsg(true)}>
-                Birthday Message 💌
-              </button>
+              <button onClick={() => setShowMsg(true)}>Birthday Message 💌</button>
             </div>
 
             <AnimatePresence>
@@ -210,14 +183,14 @@ export default function Bmain() {
                 <motion.div className="fixed inset-0 bg-black/60 flex items-center justify-center">
                   <div className="bg-white text-black p-6 rounded-xl relative">
                     <button onClick={() => setShowMsg(false)} className="absolute top-2 right-2">❌</button>
-                    <p>Sending you the warmest birthday wishes for today.</p>
-                    <p>Wishing you a day filled with love and joy.</p>
+                    <p>Sending you the warmest birthday wishes for today. I can't be there in person, but I’m cheering you on from here.</p>
+                    <p>Wishing you a day filled with the same love, joy, and laughter you bring..</p>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* WISHES */}
+            {/* WISH */}
             <div className="grid grid-cols-2 gap-4">
               {["Love 💖","Smile 😊","Success 🚀","Joy 🎉"].map((w,i)=>(
                 <button key={i} onClick={()=>setWishIndex(i)} className="bg-pink-400 p-5 rounded-xl shadow">
@@ -233,10 +206,10 @@ export default function Bmain() {
                     <button onClick={()=>setWishIndex(null)} className="absolute top-2 right-2">❌</button>
                     <p>
                       {[
-                        "You are the cutest one I have ever meet.",
-                        "May you get everything you want ❤️",
-                        "Achieve all your goals 🚀",
-                        "Stay happy always 🎀"
+                        "You are the cutest one I have ever meet .",
+                        "May you got everything that you want ❤️",
+                        "You achieve all your goals . And become successful in life 🤗",
+                        "Always be happy and in joy mood . Don't be sad in any situation.🎀"
                       ][wishIndex]}
                     </p>
                   </div>
@@ -244,28 +217,33 @@ export default function Bmain() {
               )}
             </AnimatePresence>
 
-            {/* HEARTS */}
+            {/* SEND LOVE */}
             <div className="bg-white/20 p-6 rounded-2xl shadow-xl text-center">
               <button onClick={spawnHearts} className="bg-red-500 px-6 py-3 rounded-full shadow">
                 ❤️ Send Love
               </button>
             </div>
 
-            {hearts.map((h) => (
-              <motion.div
-                key={h.id}
-                initial={{ y: 200 }}
-                animate={{ y: -200, opacity: 0 }}
-                transition={{ duration: 2 }}
-                style={{ position: "absolute", left: `${h.left}%` }}
-                className={h.size}
-              >
-                ❤️
-              </motion.div>
-            ))}
           </div>
         </div>
       )}
+
+      {/* ❤️ FIXED HEART LAYER (BOTTOM → TOP) */}
+<div className="fixed inset-0 pointer-events-none overflow-hidden">
+  {hearts.map((h) => (
+    <motion.div
+      key={h.id}
+      initial={{ y: "100vh", opacity: 1 }}   // 👈 start from bottom
+      animate={{ y: "-20vh", opacity: 0 }}   // 👈 go above screen
+      transition={{ duration: 2, ease: "easeOut" }}
+      style={{ position: "absolute", left: `${h.left}%` }}
+      className={h.size}
+    >
+      ❤️
+    </motion.div>
+  ))}
+</div>
+
     </div>
   );
 }
