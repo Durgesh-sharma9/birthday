@@ -10,13 +10,11 @@ export default function Bmain() {
   const [confetti, setConfetti] = useState([]);
   const audioRef = useRef(null);
 
-  // ▶️ Start music
   const startMusic = () => {
     audioRef.current?.play().catch(() => {});
     setPage(2);
   };
 
-  // ⏳ Countdown
   useEffect(() => {
     if (page === 2 && count > 0) {
       const t = setTimeout(() => setCount((c) => c - 1), 1000);
@@ -27,7 +25,6 @@ export default function Bmain() {
     }
   }, [page, count]);
 
-  // ❤️ Hearts
   const spawnHearts = () => {
     const batch = Array.from({ length: 3 }).map((_, i) => ({
       id: Date.now() + i,
@@ -44,7 +41,6 @@ export default function Bmain() {
     }, 2500);
   };
 
-  // 🎉 Confetti
   const spawnConfetti = () => {
     const batch = Array.from({ length: 6 }).map((_, i) => ({
       id: Date.now() + i,
@@ -64,7 +60,7 @@ export default function Bmain() {
   return (
     <div className="h-screen w-full flex items-center justify-center bg-gradient-to-br from-pink-300 via-rose-300 to-purple-400 text-white font-[cursive] overflow-hidden">
 
-      {/* 🎵 Music */}
+      {/* MUSIC */}
       <audio ref={audioRef} loop>
         <source src="/music.mp3" type="audio/mp3" />
       </audio>
@@ -158,7 +154,14 @@ export default function Bmain() {
         <div className="w-full h-full flex justify-center items-start overflow-y-auto">
           <div className="max-w-md w-full space-y-6 p-4">
 
-            {/* 🎞️ SLIDESHOW SECTION */}
+            {/* 🎥 VIDEO ADDED */}
+            <div className="w-full rounded-2xl overflow-hidden shadow-xl">
+              <video autoPlay loop muted className="w-full h-48 object-cover">
+                <source src="/celebrate.mp4" type="video/mp4" />
+              </video>
+            </div>
+
+            {/* SLIDESHOW */}
             <div className="bg-white/20 p-6 rounded-2xl shadow-xl text-center">
               <div className="overflow-hidden w-72 h-52 rounded-lg mx-auto">
                 <motion.div
@@ -181,7 +184,7 @@ export default function Bmain() {
               <p className="mt-4">You are the most beautiful gift 💖</p>
             </div>
 
-            {/* 🎉 CONFETTI */}
+            {/* CONFETTI */}
             {confetti.map((c) => (
               <motion.div
                 key={c.id}
@@ -195,7 +198,7 @@ export default function Bmain() {
               </motion.div>
             ))}
 
-            {/* 💌 MESSAGE SECTION */}
+            {/* MESSAGE */}
             <div className="bg-white/20 p-6 rounded-2xl shadow-xl text-center">
               <button onClick={() => setShowMsg(true)}>
                 Birthday Message 💌
@@ -206,56 +209,34 @@ export default function Bmain() {
               {showMsg && (
                 <motion.div className="fixed inset-0 bg-black/60 flex items-center justify-center">
                   <div className="bg-white text-black p-6 rounded-xl relative">
-                    <button
-                      onClick={() => setShowMsg(false)}
-                      className="absolute top-2 right-2"
-                    >
-                      ❌
-                    </button>
-
-                    <p>
-                      Sending you the warmest birthday wishes for today. I can't be there in person, but I’m cheering you on from here.
-                    </p>
-                    <p>
-                      Wishing you a day filled with the same love, joy, and laughter you bring..
-                    </p>
+                    <button onClick={() => setShowMsg(false)} className="absolute top-2 right-2">❌</button>
+                    <p>Sending you the warmest birthday wishes for today.</p>
+                    <p>Wishing you a day filled with love and joy.</p>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* 🎁 WISH SECTION (KEPT SAME) */}
+            {/* WISHES */}
             <div className="grid grid-cols-2 gap-4">
-              {["Love 💖", "Smile 😊", "Success 🚀", "Joy 🎉"].map(
-                (w, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setWishIndex(i)}
-                    className="bg-pink-400 p-5 rounded-xl shadow"
-                  >
-                    {w}
-                  </button>
-                )
-              )}
+              {["Love 💖","Smile 😊","Success 🚀","Joy 🎉"].map((w,i)=>(
+                <button key={i} onClick={()=>setWishIndex(i)} className="bg-pink-400 p-5 rounded-xl shadow">
+                  {w}
+                </button>
+              ))}
             </div>
 
             <AnimatePresence>
               {wishIndex !== null && (
                 <motion.div className="fixed inset-0 bg-black/60 flex items-center justify-center">
                   <div className="bg-white text-black p-6 rounded-xl relative">
-                    <button
-                      onClick={() => setWishIndex(null)}
-                      className="absolute top-2 right-2"
-                    >
-                      ❌
-                    </button>
-
+                    <button onClick={()=>setWishIndex(null)} className="absolute top-2 right-2">❌</button>
                     <p>
                       {[
-                        "You are the cutest one I have ever meet .",
-                        "May you got everything that you want ❤️",
-                        "You achieve all your goals . And become successful in life 🤗",
-                        "Always be happy and in joy mood . Don't be sad in any situation.🎀",
+                        "You are the cutest one I have ever meet.",
+                        "May you get everything you want ❤️",
+                        "Achieve all your goals 🚀",
+                        "Stay happy always 🎀"
                       ][wishIndex]}
                     </p>
                   </div>
@@ -263,12 +244,9 @@ export default function Bmain() {
               )}
             </AnimatePresence>
 
-            {/* ❤️ SEND LOVE */}
+            {/* HEARTS */}
             <div className="bg-white/20 p-6 rounded-2xl shadow-xl text-center">
-              <button
-                onClick={spawnHearts}
-                className="bg-red-500 px-6 py-3 rounded-full shadow"
-              >
+              <button onClick={spawnHearts} className="bg-red-500 px-6 py-3 rounded-full shadow">
                 ❤️ Send Love
               </button>
             </div>
