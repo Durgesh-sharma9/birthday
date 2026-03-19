@@ -243,6 +243,28 @@ export default function Bmain() {
     </motion.div>
   ))}
 </div>
+{/* 🎈 BALLOONS */}
+<div className="fixed bottom-0 left-0 w-full pointer-events-none">
+  {[1, 2, 3, 4, 5].map((i) => (
+    <motion.div
+      key={i}
+      initial={{ y: 100, opacity: 1 }}
+      animate={{ y: -600, opacity: 0 }}
+      transition={{
+        duration: 6 + Math.random() * 3,
+        repeat: Infinity,
+        delay: i * 0.5,
+      }}
+      style={{
+        position: "absolute",
+        left: `${Math.random() * 90}%`,
+      }}
+      className="text-4xl"
+    >
+      🎈
+    </motion.div>
+  ))}
+</div>
 
     </div>
   );
